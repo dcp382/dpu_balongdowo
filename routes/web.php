@@ -10,10 +10,22 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+use Illuminate\Support\Facades\Route;
 
+Auth::routes();
+
+Route::group(['middleware' => ['guest']],function(){
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
+});
+});
+Route::group(['middleware' => ['auth','role:admin']],function(){
+    Route::get('/dashboard','DashboardController@index')->name('dashboard');
+});
+Route::group(['middleware' => ['auth','role:user']],function(){
+    Route::get('/dashboard_user','DashboardController@dash_user')->name('dashboard_user');
 });
 
-Route::get('/dashboard','DashboardController@index')->name('dashboard');
+
 Route::get('/user','UserController@data_user')->name('user');
+// Route::get('/home', 'HomeController@index')->name('home');
